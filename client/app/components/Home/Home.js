@@ -1,105 +1,65 @@
 import React, { Component } from 'react';
 import 'whatwg-fetch';
+import { inject, observer } from "mobx-react"
+import './Home.scss'
 
+const socket = io.connect('http://localhost:3000');
+
+@inject('store') @observer
 class Home extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      counters: []
     };
+  }
 
-    this.newCounter = this.newCounter.bind(this);
-    this.incrementCounter = this.incrementCounter.bind(this);
-    this.decrementCounter = this.decrementCounter.bind(this);
-    this.deleteCounter = this.deleteCounter.bind(this);
-
-    this._modifyCounter = this._modifyCounter.bind(this);
+  redirect(location) {
+    window.location = '/' + location;
   }
 
   componentDidMount() {
-    fetch('/api/counters')
-      .then(res => res.json())
-      .then(json => {
-        this.setState({
-          counters: json
-        });
-      });
-  }
+    // fetch('/api/counters')
+    //   .then(res => res.json())
+    //   .then(json => {
+    //     this.setState({
+    //       counters: json
+    //     });
+    //   });
 
-  newCounter() {
-    fetch('/api/counters', { method: 'POST' })
-      .then(res => res.json())
-      .then(json => {
-        let data = this.state.counters;
-        data.push(json);
-
-        this.setState({
-          counters: data
-        });
-      });
-  }
-
-  incrementCounter(index) {
-    const id = this.state.counters[index]._id;
-
-    fetch(`/api/counters/${id}/increment`, { method: 'PUT' })
-      .then(res => res.json())
-      .then(json => {
-        this._modifyCounter(index, json);
-      });
-  }
-
-  decrementCounter(index) {
-    const id = this.state.counters[index]._id;
-
-    fetch(`/api/counters/${id}/decrement`, { method: 'PUT' })
-      .then(res => res.json())
-      .then(json => {
-        this._modifyCounter(index, json);
-      });
-  }
-
-  deleteCounter(index) {
-    const id = this.state.counters[index]._id;
-
-    fetch(`/api/counters/${id}`, { method: 'DELETE' })
-      .then(_ => {
-        this._modifyCounter(index, null);
-      });
-  }
-
-  _modifyCounter(index, data) {
-    let prevData = this.state.counters;
-
-    if (data) {
-      prevData[index] = data;
-    } else {
-      prevData.splice(index, 1);
-    }
-
-    this.setState({
-      counters: prevData
-    });
+    // socket.on('news', function (data) {
+    //   console.log(data);
+    //   socket.emit('my other event', { my: 'data' });
+    // });
   }
 
   render() {
     return (
-      <div>
-        <p>Counters:</p>
-
-        <ul>
-          { this.state.counters.map((counter, i) => (
-            <li key={i}>
-              <span>{counter.count} </span>
-              <button onClick={() => this.incrementCounter(i)}>+</button>
-              <button onClick={() => this.decrementCounter(i)}>-</button>
-              <button onClick={() => this.deleteCounter(i)}>x</button>
-            </li>
-          )) }
-        </ul>
-
-        <button onClick={this.newCounter}>New counter</button>
+      <div class='home-container'>
+        <div class='info'>
+          <div class='section'>
+            <div class='title'>Welcome</div>
+            <div class='desc'>{this.props.store.account.name}</div>
+          </div>
+          <div class='section'>
+            <div class='title'>Account Balance</div>
+            <div class='desc'>£{this.props.store.account.balance.toFixed(2)}</div>
+          </div>
+        </div>
+        <div class='buttons'>
+          <div class='button' onClick={this.redirect.bind(this, 'withdraw')}>Cash Withdraw</div>
+          <div class='button'>Deposit</div>
+          <div class='button'>Transactions</div>
+          <div class='button'>Settings</div>
+          {/** <div class='button'>
+            <span>
+              Quick Cash
+            </span>
+            <span style={{'font-weight': 'normal', 'margin-left': 7}}>
+              £20
+            </span>
+          </div> **/}
+        </div>
       </div>
     );
   }

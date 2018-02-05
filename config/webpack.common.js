@@ -32,9 +32,10 @@ module.exports = {
     rules: [
       // JS files
       {
-        test: /\.jsx?$/,
+        test: /\.js?$/,
         include: helpers.root('client'),
-        loader: 'babel-loader'
+        loader: 'babel-loader',
+        query: { presets: ['es2015', 'react'], plugins: ["transform-decorators-legacy", "transform-class-properties","react-html-attrs"] }
       },
 
       // SCSS files

@@ -1,17 +1,29 @@
-import React from 'react';
+import React, { Component } from 'react';
 
 import { Link } from 'react-router-dom';
 
-const Header = () => (
-  <header>
-    <Link to="/">Home</Link>
+class Header extends Component {
+  render() {
+    let register = (
+      <a href="/register">Register</a>
+    )
 
-    <nav>
-      <Link to="/helloworld">Hello World</Link>
-    </nav>
+    let logout = (
+      <a href="/logout">Card Return</a>
+    )
 
-    <hr />
-  </header>
-);
-
+    return (
+      <div class="header">
+        <div class="left">
+          <a href='/'>
+            ATM
+          </a>
+        </div>
+        <div class="right">
+          {this.props.authed ? logout : register}
+        </div>
+      </div>
+    );
+  }
+}
 export default Header;
