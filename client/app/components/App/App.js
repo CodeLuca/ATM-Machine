@@ -22,13 +22,13 @@ class App extends Component {
 	componentDidMount() {
 		axios.get('/api/account/get')
 			.then((result) => {
+				Store.setAccount(result.data);
 				if(!result.data.error) {
 					this.setState({
 						authed: true,
 						user: result.data,
 						loaded: true
 					})
-					Store.setAccount(result.data);
 				} else {
 					if(allowedPaths.indexOf(window.location.pathname.toLowerCase()) == -1) {
 						window.location = '/login';
