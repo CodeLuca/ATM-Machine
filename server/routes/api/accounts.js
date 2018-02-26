@@ -54,6 +54,7 @@ module.exports = (app, io) => {
   });
 
   app.get('/api/login/:id/:pin', (req, res, next) => {
+    console.log(req.params.id, req.params.pin);
     if(req.session.user) {
       res.redirect('/');
       return;
@@ -62,7 +63,7 @@ module.exports = (app, io) => {
     Account.findOne({'identifier': req.params.id})
       .exec()
       .then((account) => {
-        if(account.pin != req.params.pin) {
+        if(!account || account.pin != req.params.pin) {
           res.send({'error': 'Incorrect pin.'});
         } else {
           req.session.user = account;
@@ -92,6 +93,11 @@ module.exports = (app, io) => {
           res.send({error: 'You do not have enough money in your balance to withdraw this amount'});
           return;
         }
+        account.transactions.push({
+          'type': 'Withdraw',
+          'amount': req.params.amount,
+          'date': new Date().toLocaleString()
+        })
         account.balance -= Number(req.params.amount);
 
         account.save()
@@ -101,12 +107,42 @@ module.exports = (app, io) => {
       .catch((err) => next(err));
   });
 
-  app.get('/api/account/deposit/:id/:amount', (req, res, next) => {
-    Account.findById(req.params.id)
+  app.get('/api/account/deposit/:amount', (req, res, next) => {
+    if(isNaN(req.params.amount)) {
+      res.send({'error': 'Amount must be a number'});
+      return;
+    }
+
+    Account.findById(req.session.user.id)
       .exec()
       .then((account) => {
         account.balance += Number(req.params.amount);
 
+        account.transactions.push({
+          'type': 'Deposit',
+          'amount': req.params.amount,
+          'date': new Date().toLocaleString()
+        })
+        account.save()
+          .then(() => res.json(account))
+          .catch((err) => next(err));
+      })
+      .catch((err) => next(err));
+  });
+
+  app.get('/api/account/changepin/:pin', (req, res, next) => {
+    if(isNaN(req.params.pin)) {
+      res.send({'error': 'Your PIN must be a number.'})
+      return;
+    }
+    if(req.params.pin.toString().length != 4) {
+      res.send({'error': 'Your PIN must be 4 digits.'})
+      return; 
+    }
+    Account.findById(req.session.user.id)
+      .exec()
+      .then((account) => {
+        account.pin = req.params.pin;
         account.save()
           .then(() => res.json(account))
           .catch((err) => next(err));

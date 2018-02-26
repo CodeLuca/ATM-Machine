@@ -1,0 +1,176 @@
+@charset "UTF-8";
+
+.transactions-container {
+  width: 100%;
+  max-width: 100vw !important;
+  min-height: 60vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .info {
+    width: 25%;
+    margin-left: 50px;
+
+    .section {
+      .title {
+        font-size: 1.5em;
+        color: #4EB3EF;
+      }
+      .desc {
+        font-size: 2.25em;
+        font-weight: 800;
+      }
+      margin-bottom: 25px;
+    }
+  }
+
+  .content {
+    display: flex;
+    width: 70%;
+    flex-direction: column;
+
+    .header {
+      color: #4EB3EF;
+      width: 95%;
+      margin-left: 25px;
+      font-size: 2.3em;
+
+      .header-title {
+        font-size: 1.5em;
+        font-weight: 800;
+        color: white;
+      }
+    }
+
+    .table {
+    	* {
+    		border: 0px !important;
+    	}
+      table {
+        width: 90%;
+        margin-left: 25px;
+        margin-top: 25px;
+        border-collapse: collapse;
+      }
+
+      /* Zebra striping */
+      tr:nth-of-type(odd) {
+        background: rgba(255,255,255,.1);
+      }
+      /* Zebra striping */
+      tr:nth-of-type(even) {
+        background: rgba(255,255,255,.25);
+      }
+
+      th {
+        background: #3498db;
+        color: white;
+        font-weight: bold;
+      }
+
+      td,
+      th {
+        padding: 10px;
+        border: 1px solid #ccc;
+        text-align: left;
+        font-size: 18px;
+      }
+
+      /* 
+			Max width before this PARTICULAR table gets nasty
+			This query will take effect for any screen smaller than 760px
+			and also iPads specifically.
+			*/
+      @media only screen and (max-width: 760px),
+      (min-device-width: 768px) and (max-device-width: 1024px) {
+
+        table {}
+
+        /* Force table to not be like tables anymore */
+        table,
+        thead,
+        tbody,
+        th,
+        td,
+        tr {
+          display: block;
+        }
+
+        /* Hide table headers (but not display: none;, for accessibility) */
+        thead tr {
+          position: absolute;
+          top: -9999px;
+          left: -9999px;
+        }
+
+        tr {
+          border: 1px solid #ccc;
+        }
+
+        td {
+          /* Behave  like a "row" */
+          border: none;
+          border-bottom: 1px solid #eee;
+          position: relative;
+          padding-left: 50%;
+        }
+
+        td:before {
+          /* Now like a table header */
+          position: absolute;
+          /* Top/left values mimic padding */
+          top: 6px;
+          left: 6px;
+          width: 45%;
+          padding-right: 10px;
+          white-space: nowrap;
+          /* Label the data */
+          content: attr(data-column);
+
+          color: #000;
+          font-weight: bold;
+        }
+      }
+    }
+
+    .submit {
+      width: 40%;
+      margin: 25px;
+      height: 125px;
+      font-size: 2em;
+      font-weight: lighter;
+      background: white;
+      color: #4EB3EF;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: rgba(0, 0, 0, 0.15) 0 1.6rem 4.75rem;
+      transition: 0.2s all;
+
+      &:hover {
+        box-shadow: rgba(0, 0, 0, 0.4) 0 1.6rem 4.75rem;
+        transform: scale(1.02, 1.02);
+        cursor: pointer;
+        background: #4EB3EF;
+        color: #fff;
+      }
+    }
+  }
+
+
+  @media(max-width: 875px) {
+    flex-direction: column;
+    .info {
+      width: 95% !important;
+    }
+    .content {
+      margin-top: 50px;
+      width: 95%;
+    }
+    .button {
+      width: 100% !important;
+    }
+  }
+}

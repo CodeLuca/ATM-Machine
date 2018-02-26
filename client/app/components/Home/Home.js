@@ -18,21 +18,6 @@ class Home extends Component {
     window.location = '/' + location;
   }
 
-  componentDidMount() {
-    // fetch('/api/counters')
-    //   .then(res => res.json())
-    //   .then(json => {
-    //     this.setState({
-    //       counters: json
-    //     });
-    //   });
-
-    // socket.on('news', function (data) {
-    //   console.log(data);
-    //   socket.emit('my other event', { my: 'data' });
-    // });
-  }
-
   render() {
     return (
       <div class='home-container'>
@@ -48,9 +33,9 @@ class Home extends Component {
         </div>
         <div class='buttons'>
           <div class='button' onClick={this.redirect.bind(this, 'withdraw')}>Cash Withdraw</div>
-          <div class='button'>Deposit</div>
-          <div class='button'>Transactions</div>
-          <div class='button'>Settings</div>
+          <div class='button' onClick={this.redirect.bind(this, 'deposit')}>Cash Deposit</div>
+          <div class='button' onClick={this.redirect.bind(this, 'transactions')}>Transactions</div>
+          <div class='button' onClick={this.redirect.bind(this, 'changepin')}>Change PIN</div>
           {/** <div class='button'>
             <span>
               Quick Cash
